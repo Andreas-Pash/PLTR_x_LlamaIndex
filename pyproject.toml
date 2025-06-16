@@ -1,0 +1,29 @@
+[project]
+name = "pltr_x_llamaindex"
+version = "0.0.1"
+authors = [
+  { name="Andreas Pashiardis", email="anpashiardis@hotmail.com" }
+]
+description = "A python package exploring llama_index customised GraphRAG aproaches"
+readme = "README.md"
+requires-python = ">=3.11.0" 
+dependencies = [
+    "pydantic>=2.7",
+    "neo4j",
+    "graspologic",
+    "langchain_community",
+    "llama-index",
+    "llama-index-graph-stores-neo4j",
+    "llama-index-llms-databricks",
+    "llama-index-embeddings-huggingface",
+    "llama-index-embeddings-langchain",
+    "llama-index-llms-openai",
+    "llama-index-llms-azure-openai",
+    "llama-index-embeddings-openai",
+    "llama-index-embeddings-azure-openai",
+    "llama-index-graph-stores-nebula"
+]
+
+
+[project.scripts]
+extract-provisions = "GraphRag:main"
