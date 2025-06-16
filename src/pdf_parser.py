@@ -79,3 +79,5 @@ def pdf_parser(input_doc_path):
     # Document Tags format:
     with (output_dir / f"{doc_filename}.doctags").open("w", encoding="utf-8") as fp:
         fp.write(conv_result.document.export_to_document_tokens())
+
+####    Todo: Create a wrapper parsing all available reports or 8k's    ####

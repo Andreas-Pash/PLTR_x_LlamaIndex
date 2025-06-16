@@ -1,3 +1,5 @@
+####    Todo: Change format to .ipynb      ####
+
 # Databricks notebook source
 # MAGIC %sh
 # MAGIC rm -rf ~/.local/share/pypoetry
