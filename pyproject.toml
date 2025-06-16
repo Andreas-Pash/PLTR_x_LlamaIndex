@@ -26,4 +26,4 @@ dependencies = [
 
 
 [project.scripts]
-extract-provisions = "GraphRag:main"
+PLTR_x_LlamaIndex = "PLTR_x_LlamaIndex:main"
