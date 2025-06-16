@@ -1,5 +1,5 @@
 [project]
-name = "pltr_x_llamaindex"
+name = "PLTR_x_LlamaIndex"
 version = "0.0.1"
 authors = [
   { name="Andreas Pashiardis", email="anpashiardis@hotmail.com" }
