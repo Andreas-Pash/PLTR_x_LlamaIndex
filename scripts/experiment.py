@@ -483,7 +483,7 @@ extractor = GraphRAGExtractor(
             )
 
 index = PropertyGraphIndex(
-    nodes=nodes[:3],
+    nodes=nodes,
     property_graph_store=GraphRAGStore(),
     kg_extractors=[extractor],   
     llm=azure_openai_llm,  
@@ -588,9 +588,9 @@ df.to_csv("triples.csv", index=False)
 
 from neo4j import GraphDatabase
 
-uri = "neo4j+s://ad9f52c8.databases.neo4j.io"
+uri = " "
 username = "neo4j"
-password = "B5O0mYq5Va3JE-FvxiDUjkjlGYutu3jLopyollF65jE"
+password = " "
 driver = GraphDatabase.driver(uri, auth=(username, password))
 
 def create_graph(tx, subject, predicate, object_):
