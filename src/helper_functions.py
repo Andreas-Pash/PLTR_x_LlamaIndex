@@ -4,6 +4,8 @@ import logging
 from pathlib import Path
 from typing import List, Optional
 
+import pandas as pd 
+
 import openai
 import nest_asyncio
 from dotenv import load_dotenv
@@ -37,16 +39,28 @@ def load_markdown_as_documents(root_dir: str = "data") -> List[Document]:
     for md_path in Path(root_dir).rglob("*.md"):
         text = md_path.read_text(encoding="utf-8")
         parent_name = md_path.parent.name
-        year: Optional[str] = None
-        period: Optional[str] = None
-
-        if " " in parent_name:
-            year, period = parent_name.split(" ", 1)
+        
+        report_type = (md_path.parent.relative_to(root_dir).parts[1]) # 10K or 8K
+        doc_timestamp = (md_path.parent.relative_to(root_dir).parts[2])  
+        
+        if report_type == "10K":
+            doc_timestamp = doc_timestamp.split(" ")[0]
+            period = 'Yearly'
+        elif report_type == "10Q":
+            doc_timestamp = doc_timestamp.replace("_","-")
+            period = 'Quartelrly'
+        elif report_type == "8K":
+            doc_timestamp = doc_timestamp.replace("_","-")
+            period = ' '
+        else:
+            logging.error(f"Invalid report type: {report_type}")
+            raise ValueError(f"Invalid report type: {report_type}")
 
         metadata = {
+            "filename": f"{parent_name}.pdf",
             "company": 'Palantir Technologies',
-            "document_type": "Financial report",
-            "year": year,
+            "document_type": f"{report_type} report",
+            "timestamp": doc_timestamp,
             "period": period,
         }
         documents.append(
@@ -90,7 +104,7 @@ class SafeAzureOpenAI(AzureOpenAI):
 
 
 ###     ALTERNATIVE Limiter        ###
-# # one limiter for all(i.e. global) OpenAI traffic
+# # one(global) limiter for all OpenAI traffic
 
 # RPM_THR = 60 
 # limiter = AsyncLimiter(max_rate=RPM_THR, time_period=60) 
@@ -126,4 +140,28 @@ class SafeAzureOpenAI(AzureOpenAI):
 #         async with limiter:
 #             return await super()._achat(messages, **kwargs) 
 
+def kg_relations_to_df(index: PropertyGraphIndex, filename:str = None,  save_as_csv: bool = False):
+    graph = index.property_graph_store.graph  
+    first_edge = next(iter(graph.relations.values()))
+    property_keys = list(first_edge.model_dump().get("properties", {}).keys())
 
+    triples = [
+        (
+            edge.model_dump().get("source_id"),
+            edge.model_dump().get("label"),
+            edge.model_dump().get("target_id"),
+            *[
+                edge.model_dump().get("properties", {}).get(key)
+                for key in property_keys if key!= 'triplet_source_id'
+            ]
+        )
+        for _, edge in graph.relations.items()
+    ]
+    df = pd.DataFrame(triples, columns= ["subject", "predicate", "object"] + [key for key in property_keys if key!= 'triplet_source_id'] )
+    
+    if save_as_csv:
+        path = filename if filename else os.path.join(os.getcwd(), "extracted_data/kg_relationships/kg_relations.csv")
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        df.to_csv(path, index=False) 
+
+    return df
