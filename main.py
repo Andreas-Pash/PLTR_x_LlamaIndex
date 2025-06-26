@@ -14,11 +14,11 @@ def load_environment_variables():
     """Load required environment variables from local script or .env"""
     load_dotenv(dotenv_path="azure_envars.env", override=True)
 
-def create_graph_index(save_index = True, index_path = None): 
+def create_graph_index(docs_dir= "data/parsed_docs", num_nodes = None, save_index = True, index_path = None, save_kg = False, kg_path = None): 
     load_environment_variables()
     token_provider = get_bearer_token_provider(DefaultAzureCredential(), "https://cognitiveservices.azure.com/.default")
     
-    docs = load_markdown_as_documents(root_dir= "data/parsed_docs")
+    docs = load_markdown_as_documents(root_dir= docs_dir)
     splitter = SentenceSplitter(
         chunk_size=1024,
         chunk_overlap=50,
@@ -35,7 +35,7 @@ def create_graph_index(save_index = True, index_path = None):
         use_azure_ad= True,
         api_version=os.getenv("OPENAI_API_VERSION"),
         temperature=0,
-    ) 
+    )
     Settings.embed_model = embed_model
     Settings.llm = llm
 
@@ -47,17 +47,23 @@ def create_graph_index(save_index = True, index_path = None):
                 max_paths_per_chunk= max_knowledge_triplets
             )
 
+    nodes_sample = nodes if num_nodes is None else nodes[:num_nodes]
+    
     index = PropertyGraphIndex(
-        nodes= nodes,
+        nodes= nodes_sample,
         property_graph_store= GraphRAGStore(),
         kg_extractors=[extractor],
         show_progress= True
     )
 
     if save_index:
-        save_path = index_path if index_path else os.path.join(os.getcwd(), "palantir_10k_graph")
-        os.makedirs(save_path, exist_ok=True)
+        save_path = index_path if index_path else os.path.join(os.getcwd(), "extracted_data/palantir_10k_graph")
+        os.makedirs(os.path.dirname(save_path), exist_ok=True)
         index.storage_context.persist(persist_dir= save_path)
+    if save_kg:
+        save_path = kg_path if kg_path else os.path.join(os.getcwd(), "extracted_data/kg_llm.html")
+        os.makedirs(os.path.dirname(save_path), exist_ok=True)
+        index.property_graph_store.save_networkx_graph(name= save_path)
 
     return index
 
