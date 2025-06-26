@@ -59,7 +59,7 @@ def pdf_parser(input_doc_path):
 
     ## Export results
     filename = str(input_doc_path).split('\\')[1].rstrip('.pdf')
-    output_dir = Path(f"parsed_reports//{filename}")
+    output_dir = Path(f"data//parsed_docs//{filename}")
     output_dir.mkdir(parents=True, exist_ok=True)
     doc_filename = conv_result.input.file.stem
 
@@ -80,4 +80,5 @@ def pdf_parser(input_doc_path):
     with (output_dir / f"{doc_filename}.doctags").open("w", encoding="utf-8") as fp:
         fp.write(conv_result.document.export_to_document_tokens())
 
-####    Todo: Create a wrapper parsing all available reports or 8k's    ####
+
+####    Todo: Create a wrapper parsing all available reports    ####
