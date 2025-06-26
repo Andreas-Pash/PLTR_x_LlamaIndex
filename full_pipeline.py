@@ -35,7 +35,6 @@ save_idx_path = os.path.join(os.getcwd(), "outputs/palantir_8k_10k_graph")
 save_kg_path = os.path.join(os.getcwd(), "outputs/8k_10k_kg.html")
 
 index = create_graph_index(docs_dir= "data",
-                           # num_nodes = 1,
                            save_index = True,
                            save_kg = True,
                            index_path = save_idx_path,
