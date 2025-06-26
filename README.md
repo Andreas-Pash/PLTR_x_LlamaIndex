@@ -52,11 +52,7 @@ python main.py
 ├── azure_envars.py             # Legacy env setup
 ├── data/                       # Parsed documents
 ├── scripts/                     
-├── src/                        # Core logic
-│   ├── helper_functions.py
-│   ├── graph_rag_store.py
-│   └── llama_index_graph_rag_extractor.py
-    └── pdf_parser.py
+├── src/                        # Core logic including parsing
 ├── tests/                      # Unit tests
 ```
 
