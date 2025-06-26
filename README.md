@@ -4,11 +4,11 @@ Parsing Palantir’s financial and earnings reports. Leveraging and integrating 
 
 ## 📦 Features
 
-- ✅ Indexing with LlamaIndex
-- ✅ LLM (OpenAI, Azure, Databricks)
-- ✅ Embedding support (HuggingFace, LangChain, OpenAI)
-- ✅ Graph storage via Neo4j and Nebula
-- ✅ Modular and extensible design ( MlFlow, Async)
+- Indexing with LlamaIndex
+- Azure OpenAI LLM of choice
+- Embedding support (HuggingFace, LangChain, OpenAI)
+- Graph storage via Neo4j and NetworkX
+- Modular and extensible design ( MlFlow, Async)
 
 
 ## 🚀 Getting Started
