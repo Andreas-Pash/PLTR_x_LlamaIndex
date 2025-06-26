@@ -111,9 +111,20 @@ class GraphRAGExtractor(TransformComponent):
             )
             existing_nodes.append(entity_node)
 
+        # Set up a Document level node if we want to capture metadata as relationships and not attributes of a node
+         
+        # metadata[ "entity_description"] = 'A connection to the document title'  # Not used in the current implementation. But will be useful in future work.
+        # entity_node = EntityNode(
+        #     name= metadata["filename"],
+        #     label= 'Doc title',
+        #     properties= metadata
+        # )
+        # existing_nodes.append(entity_node)
+         
+
         metadata = node.metadata.copy()
         for triple in entities_relationship:
-            subj, rel, obj, description = triple
+            subj, obj, rel, description = triple
             subj_node = EntityNode(name=subj, properties=metadata)
             obj_node = EntityNode(name=obj, properties=metadata)
             metadata["relationship_description"] = description
@@ -123,9 +134,25 @@ class GraphRAGExtractor(TransformComponent):
                 target_id=obj_node.id,
                 properties=metadata,
             )
-
+            
+            # tbl_subj_node = EntityNode(name=metadata["filename"], properties=metadata)
+            # title_subj_rel = Relation(
+            #     label="derived node",
+            #     source_id=tbl_subj_node.id,
+            #     target_id=subj_node.id,
+            #     properties=metadata
+            # )
+            # title_obj_rel = Relation(
+            #     label="derived node",
+            #     source_id=tbl_subj_node.id,
+            #     target_id=obj_node.id,
+            #     properties=metadata
+            # )
+ 
             existing_nodes.extend([subj_node, obj_node])
             existing_relations.append(rel_node)
+            # existing_nodes.extend([tbl_subj_node])
+            # existing_relations.extend([title_subj_rel, title_obj_rel])
 
         node.metadata[KG_NODES_KEY] = existing_nodes
         node.metadata[KG_RELATIONS_KEY] = existing_relations
