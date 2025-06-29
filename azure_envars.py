@@ -1,11 +1,6 @@
 import os
- 
-import logging
-from pathlib import Path 
 
-from azure.identity import ClientSecretCredential 
-from openai import AzureOpenAI
-from azure.identity import DefaultAzureCredential, get_bearer_token_provider  
+from azure.identity import ClientSecretCredential
 
     
 os.environ['AZURE_TENANT_ID'] = dbutils.secrets.get(scope = "[---]", 
