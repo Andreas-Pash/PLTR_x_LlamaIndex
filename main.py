@@ -5,9 +5,11 @@ from src.llama_index_graph_rag_extractor import GraphRAGExtractor
 from src.graph_rag_store import GraphRAGStore
 
 from dotenv import load_dotenv
-from azure.identity import ClientSecretCredential, DefaultAzureCredential, get_bearer_token_provider  
 
+from llama_index.core import PropertyGraphIndex
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
+
+from azure.identity import DefaultAzureCredential, get_bearer_token_provider  
 
 
 def load_environment_variables():
