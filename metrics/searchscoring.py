@@ -104,6 +104,12 @@ class FTQueryScoring:
     def score_recall(self) -> float:
         '''
         What proportion of correct results have been returned.
+        
+        recall = |relevant ∩ retrieved| / |relevant|
+
+        Returns:
+            float: The recall score, rounded to two decimal places.
+                Returns 0.0 if there are no overlapping items between targets and results.
         '''
 
         t = set(self.targets)
@@ -119,6 +125,12 @@ class FTQueryScoring:
     def score_reciprocal_rank(self) -> float:
         '''
         The inverse of the rank of the first relevant document in a list of search results.
+        
+        RR = 1 / rank_of_first_relevant_result
+
+        Returns:
+            float: The reciprocal rank score. Returns 0.0 if no relevant item is found 
+                    or if the targets list is empty.
         '''
 
         if len(self.targets) > 0:
